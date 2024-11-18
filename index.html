@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OW2 Player DB</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+    <img src="images/ow2-logo.png" alt="Overwatch 2 Icon" class="logo-icon">
+    DumbDB
+  </div>
+    <input id="search" type="text" placeholder="Search player..." oninput="searchPlayer()">
+  </header>
+  <main>
+    <div class="player-list">
+      <h2>Player List</h2>
+      <ul id="playerList"></ul>
+    </div>
+    <div class="player-details" id="playerDetails">
+      <h2>Player Details</h2>
+      <div id="detailsContainer">Select a player to see details.</div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+<a href="https://forms.gle/iBFewtz8iZBHFcsX6" target="_blank" class="publish-button">Publish Dumbass</a>
+</body>
+</html>

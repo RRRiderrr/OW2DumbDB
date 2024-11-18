@@ -1,0 +1,185 @@
+/* Подключение шрифта */
+@font-face {
+  font-family: 'BigNoodleTooOblique';
+  src: url('fonts/bignoodletoooblique.ttf') format('truetype');
+}
+
+/* Основной стиль страницы */
+body {
+  font-family: Arial, sans-serif;
+  background: #0a0e17;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Шапка */
+header {
+  background: #1b2838;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input#search {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+/* Основной контент */
+main {
+  display: flex;
+  padding: 20px;
+}
+
+/* Список игроков */
+.player-list {
+  width: 30%;
+  border-right: 1px solid #333;
+  padding: 20px;
+  max-height: 80vh; /* Ограничиваем высоту списка */
+  overflow-y: auto; /* Добавляем вертикальный скроллинг */
+}
+
+.player-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.player-list li {
+  padding: 15px; /* Увеличен padding для удобства */
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  font-family: 'BigNoodleTooOblique', sans-serif; /* Шрифт для никнеймов */
+  font-size: 3rem; /* Увеличенный шрифт */
+  text-transform: uppercase; /* Для стиля */
+}
+
+.player-list li:hover {
+  background: #ff9f00;
+  color: #000;
+}
+
+/* Детали игрока */
+.player-details {
+  width: 70%;
+  padding: 20px;
+}
+
+#detailsContainer {
+  background: #1b2838;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 1.2rem; /* Общий размер текста */
+}
+
+#detailsContainer .nickname {
+  font-family: 'BigNoodleTooOblique', sans-serif; /* Шрифт для никнейма */
+  font-size: 6rem; /* Увеличенный шрифт для никнейма */
+  color: #ffffff; /* Цвет для выделения */
+  text-transform: uppercase; /* Преобразование текста в верхний регистр */
+}
+
+#detailsContainer strong {
+  font-weight: normal; /* Сброс стиля для остальных заголовков */
+}
+
+/* Стиль для кнопки в правом нижнем углу */
+.publish-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #0875f5; /* Синий цвет кнопки */
+  color: #fff; /* Белый цвет текста */
+  font-size: 1.2rem;
+  font-family: Arial, sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none; /* Убираем подчеркивание */
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Легкая тень */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Эффект наведения */
+.publish-button:hover {
+  background-color: #065bb3; /* Более тёмный синий при наведении */
+  transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff9f00;
+}
+
+.logo-icon {
+  width: 57px; /* Ширина иконки */
+  height: 40px; /* Высота иконки */
+  margin-right: 10px; /* Отступ справа от иконки */
+}
+
+/* Контейнер для никнейма и рангов */
+.nickname-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Отступ снизу */
+}
+
+/* Стиль для рангов */
+.ranks {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Гарантирует равномерное расположение */
+  margin-right: 600px; /* Оставляем вашу настройку ближе к никнейму */
+}
+
+/* Иконки рангов */
+.rank-icon {
+  width: 120px; /* Увеличенная ширина */
+  height: 120px; /* Увеличенная высота */
+  margin: 0 10px; /* Отступы с обеих сторон */
+  cursor: pointer; /* Указываем, что можно навести */
+  transition: transform 0.3s ease; /* Добавляем плавность для эффекта увеличения */
+}
+
+/* Эффект при наведении */
+.rank-icon:hover {
+  transform: scale(1.1); /* Увеличение картинки при наведении */
+}
+
+/* Разделитель между рангами */
+.rank-separator {
+  font-family: 'BigNoodleTooOblique', sans-serif; /* Шрифт для разделителя */
+  font-size: 6rem; /* Размер текста */
+  color: #fff; /* Цвет текста */
+  margin: 0; /* Убираем любые дополнительные отступы */
+  display: flex;
+  align-items: center; /* Центрируем символ вертикально */
+}
+
+/* Контейнер для роли */
+.role-container {
+  margin-top: 0px; /* Отступ сверху */
+  text-align: left; /* Центрирование изображения */
+}
+
+/* Иконка роли */
+.role-icon {
+  width: 100px; /* Ширина иконки роли */
+  height: 86px; /* Высота иконки роли */
+  cursor: pointer; /* Указываем, что можно навести */
+  transition: transform 0.3s ease; /* Эффект увеличения при наведении */
+}
+
+/* Эффект при наведении */
+.role-icon:hover {
+  transform: scale(1.1); /* Лёгкое увеличение при наведении */
+}
