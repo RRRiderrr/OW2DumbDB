@@ -52,17 +52,53 @@ function displayPlayerDetails(player) {
   // Определение пути к изображениям
   const rankImagesPath = "images/ranks/";
   const roleImagesPath = "images/roles/";
-  const minRankImage = `${rankImagesPath}${player.minRank}.png`;
-  const maxRankImage = `${rankImagesPath}${player.maxRank}.png`;
+
+  // Определение порядка рангов
+  const rankOrder = {
+    "Bronze": 1,
+    "Silver": 2,
+    "Gold": 3,
+    "Platinum": 4,
+    "Diamond": 5,
+    "Master": 6,
+    "Grandmaster": 7,
+    "Champion": 8,
+    "Top 500": 9
+  };
+
+  // Перестановка рангов по возрастанию
+  let minRank = player.minRank;
+  let maxRank = player.maxRank;
+  if (rankOrder[maxRank] < rankOrder[minRank]) {
+    [minRank, maxRank] = [maxRank, minRank];
+  }
+
+  // Генерация пути к изображениям рангов
+  const minRankImage = `${rankImagesPath}${minRank}.png`;
+  const maxRankImage = `${rankImagesPath}${maxRank}.png`;
   const roleImage = `${roleImagesPath}${player.role}.png`; // Картинка роли
+
+  // Генерация HTML для рангов
+  let ranksHtml;
+  if (minRank === maxRank) {
+    // Если ранги совпадают, выводим только одну картинку
+    ranksHtml = `
+      <img src="${minRankImage}" alt="${minRank}" class="rank-icon" title="${minRank}">
+    `;
+  } else {
+    // Если ранги разные, выводим две картинки с разделителем
+    ranksHtml = `
+      <img src="${minRankImage}" alt="${minRank}" class="rank-icon" title="${minRank}">
+      <span class="rank-separator">-</span>
+      <img src="${maxRankImage}" alt="${maxRank}" class="rank-icon" title="${maxRank}">
+    `;
+  }
 
   details.innerHTML = `
     <div class="nickname-container">
       <span class="nickname">${player.nickname}</span>
       <div class="ranks">
-        <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
-        <span class="rank-separator">-</span>
-        <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
+        ${ranksHtml}
       </div>
     </div>
     <div class="role-container">
@@ -73,6 +109,7 @@ function displayPlayerDetails(player) {
     <p><strong>Status:</strong> ${player.status}</p>
   `;
 }
+
 
 // Функция для поиска игроков
 function searchPlayer() {
