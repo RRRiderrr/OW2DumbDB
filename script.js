@@ -105,7 +105,7 @@ function displayPlayerDetails(player) {
       <img src="${roleImage}" alt="${player.role}" class="role-icon" title="${player.role}">
     </div>
     <p><strong>Situation:</strong> ${player.situation}</p>
-    <p><strong>Replay Code:</strong> ${player.replayCode}</p>
+    //<p><strong>Replay Code:</strong> ${player.replayCode}</p>
     <p><strong>Status:</strong> ${player.status}</p>
   `;
 }
