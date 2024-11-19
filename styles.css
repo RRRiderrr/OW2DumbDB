@@ -183,3 +183,15 @@ main {
 .role-icon:hover {
   transform: scale(1.1); /* Лёгкое увеличение при наведении */
 }
+
+.youtube-container {
+  margin-top: 20px; /* Отступ сверху */
+  text-align: center; /* Центрирование iframe */
+}
+
+.youtube-container iframe {
+  width: 100%; /* Полная ширина контейнера */
+  max-width: 480px; /* Максимальная ширина */
+  height: 270px; /* Фиксированная высота */
+  border: none; /* Убираем рамку */
+}
