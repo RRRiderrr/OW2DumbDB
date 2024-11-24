@@ -1,77 +1,136 @@
 const spreadsheetId = "1XsEzpmbQv4cFJjAgfROMPD7TEOy_gn22_IaPje4ZSRw";
 const apiKey = "AIzaSyAAahivxgg6dlHcjc26wF326qYg2fXXrqw";
-const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/DumbDB!A2:I100?key=${apiKey}`;
+const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/DumbDB!A2:I1000?key=${apiKey}`;
 
 let players = [];
+let currentPage = 1;
+const pageSize = 8;
+const maxVisibleButtons = 5; // Количество одновременно видимых кнопок
 
 // Функция для загрузки игроков из Google Sheets
 function fetchPlayers() {
-    fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-            players = data.values
-                .filter((row) => row[8]) // Фильтруем строки с заполненным Status
-                .map((row, index) => ({
-                    id: index + 1,
-                    timestamp: row[0],
-                    email: row[1],
-                    nickname: row[2],
-                    role: row[3],
-                    situation: row[4],
-                    minRank: row[5],
-                    maxRank: row[6],
-                    replayCode: row[7],
-                    status: row[8],
-                }));
-            displayPlayerList();
-            checkUrlParams();
-        })
-        .catch((error) => {
-            console.error("Ошибка загрузки данных:", error);
-        });
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      players = data.values
+        .filter((row) => row[8]) // Фильтруем строки с заполненным Status
+        .map((row, index) => ({
+          id: index + 1,
+          timestamp: row[0],
+          email: row[1],
+          nickname: row[2],
+          role: row[3],
+          situation: row[4],
+          minRank: row[5],
+          maxRank: row[6],
+          replayCode: row[7],
+          status: row[8],
+        }));
+      displayPlayerList(); // Отображаем первую страницу
+      displayPagination(); // Отображаем кнопки пагинации
+      checkUrlParams();
+    })
+    .catch((error) => {
+      console.error("Ошибка загрузки данных:", error);
+    });
 }
 
-// Функция для отображения списка игроков
+// Функция для отображения списка игроков на текущей странице
 function displayPlayerList() {
-    const list = document.getElementById("playerList");
-    list.innerHTML = "";
-    players.forEach((player) => {
-        const li = document.createElement("li");
-        li.textContent = player.nickname;
-        li.onclick = () => displayPlayerDetails(player);
-        list.appendChild(li);
-    });
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+
+  const playersToDisplay = players.slice(start, end);
+
+  playersToDisplay.forEach((player) => {
+    const li = document.createElement("li");
+    li.textContent = player.nickname;
+    li.onclick = () => displayPlayerDetails(player);
+    list.appendChild(li);
+  });
+}
+
+// Функция для отображения кнопок пагинации
+function displayPagination() {
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
+
+  const totalPages = Math.ceil(players.length / pageSize);
+
+  let startPage = Math.max(currentPage - Math.floor(maxVisibleButtons / 2), 1);
+  let endPage = Math.min(startPage + maxVisibleButtons - 1, totalPages);
+
+  if (endPage - startPage + 1 < maxVisibleButtons) {
+    startPage = Math.max(endPage - maxVisibleButtons + 1, 1);
+  }
+
+  if (startPage > 1) {
+    const firstButton = createPaginationButton(1, "1");
+    pagination.appendChild(firstButton);
+    if (startPage > 2) {
+      pagination.appendChild(createPaginationDots());
+    }
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    const button = createPaginationButton(i, i.toString());
+    pagination.appendChild(button);
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      pagination.appendChild(createPaginationDots());
+    }
+    const lastButton = createPaginationButton(totalPages, totalPages.toString());
+    pagination.appendChild(lastButton);
+  }
+}
+
+// Функция для создания кнопки пагинации
+function createPaginationButton(page, text) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  button.className = page === currentPage ? "active" : "";
+  button.onclick = () => {
+    currentPage = page;
+    displayPlayerList();
+    displayPagination();
+  };
+  return button;
+}
+
+// Функция для создания "..."
+function createPaginationDots() {
+  const dots = document.createElement("span");
+  dots.textContent = "...";
+  dots.className = "pagination-dots";
+  return dots;
 }
 
 // Функция для отображения деталей игрока
 function displayPlayerDetails(player) {
-    const details = document.getElementById("detailsContainer");
+  const details = document.getElementById("detailsContainer");
 
-    // Обновляем URL с параметрами игрока
-    const url = new URL(window.location);
-    url.searchParams.set("player", player.nickname);
-    url.searchParams.set("id", player.id);
-    history.pushState(null, null, url.toString());
+  // Определение пути к изображениям
+  const rankImagesPath = "images/ranks/";
+  const roleImagesPath = "images/roles/";
+  const minRankImage = `${rankImagesPath}${player.minRank}.png`;
+  const maxRankImage = `${rankImagesPath}${player.maxRank}.png`;
+  const roleImage = `${roleImagesPath}${player.role}.png`;
 
-    // Определение пути к изображениям
-    const rankImagesPath = "images/ranks/";
-    const roleImagesPath = "images/roles/";
-    const minRankImage = `${rankImagesPath}${player.minRank}.png`;
-    const maxRankImage = `${rankImagesPath}${player.maxRank}.png`;
-    const roleImage = `${roleImagesPath}${player.role}.png`;
+  // Проверяем наличие YouTube-ссылки
+  const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
+  const match = player.status?.match(youtubeRegex);
 
-    // Проверяем наличие YouTube-ссылки
-    const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
-    const match = player.status?.match(youtubeRegex);
+  const cleanStatus = player.status?.replace(youtubeRegex, "").replace(/\?.*/, "").trim();
 
-    // Убираем YouTube-ссылку из статуса
-    const cleanStatus = player.status?.replace(youtubeRegex, "").replace(/\?.*/, "").trim();
-
-    // Создаём новый блок
-    let youtubeEmbed = "";
-    if (match) {
-        const youtubeVideoId = match[1] || match[2];
-        youtubeEmbed = `
+  let youtubeEmbed = "";
+  if (match) {
+    const youtubeVideoId = match[1] || match[2];
+    youtubeEmbed = `
       <div class="youtube-container">
         <iframe 
           width="560" 
@@ -84,28 +143,15 @@ function displayPlayerDetails(player) {
         </iframe>
       </div>
     `;
-    }
+  }
 
-    // Генерация HTML для рангов
-    let ranksHtml = "";
-    if (player.minRank === player.maxRank) {
-        ranksHtml = `
-      <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
-    `;
-    } else {
-        ranksHtml = `
-      <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
-      <span class="rank-separator">-</span>
-      <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
-    `;
-    }
-
-    // Очищаем контейнер и создаём новый контент
-    details.innerHTML = `
+  details.innerHTML = `
     <div class="nickname-container">
       <span class="nickname">${player.nickname}</span>
       <div class="ranks">
-        ${ranksHtml}
+        <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
+        <span class="rank-separator">-</span>
+        <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
       </div>
     </div>
     <div class="role-container">
@@ -113,49 +159,11 @@ function displayPlayerDetails(player) {
     </div>
     <p><strong>Situation:</strong> ${player.situation}</p>
     <p><strong>Status:</strong> ${cleanStatus}</p>
+    ${youtubeEmbed}
   `;
-
-    // Добавляем YouTube-видео, если есть
-    if (youtubeEmbed) {
-        const youtubeContainer = document.createElement("div");
-        youtubeContainer.innerHTML = youtubeEmbed;
-        details.appendChild(youtubeContainer);
-    }
 }
 
-
-// Функция для поиска игроков
-function searchPlayer() {
-    const query = document.getElementById("search").value.toLowerCase();
-    const filtered = players.filter((player) =>
-        player.nickname.toLowerCase().includes(query)
-    );
-    const list = document.getElementById("playerList");
-    list.innerHTML = "";
-    filtered.forEach((player) => {
-        const li = document.createElement("li");
-        li.textContent = player.nickname;
-        li.onclick = () => displayPlayerDetails(player);
-        list.appendChild(li);
-    });
-}
-
-// Функция для проверки URL и загрузки игрока
-function checkUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-    const nickname = params.get("player");
-    const id = params.get("id");
-    if (nickname && id) {
-        const player = players.find(
-            (p) => p.nickname === nickname && p.id === parseInt(id)
-        );
-        if (player) {
-            displayPlayerDetails(player);
-        }
-    }
-}
-
-// Инициализация при загрузке страницы
+// Инициализация
 window.onload = () => {
-    fetchPlayers();
+  fetchPlayers();
 };

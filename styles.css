@@ -40,7 +40,8 @@ main {
   border-right: 1px solid #333;
   padding: 20px;
   max-height: 80vh; /* Ограничиваем высоту списка */
-  overflow-y: auto; /* Добавляем вертикальный скроллинг */
+  overflow-y: auto; /* Вертикальный скроллинг */
+  position: relative; /* Для позиционирования кнопок пагинации */
 }
 
 .player-list ul {
@@ -194,4 +195,37 @@ main {
   max-width: 480px; /* Максимальная ширина */
   height: 270px; /* Фиксированная высота */
   border: none; /* Убираем рамку */
+}
+#pagination {
+  display: flex;
+  justify-content: center;
+  position: sticky; /* Кнопки остаются видимыми при прокрутке */
+  bottom: 0; /* Расположены внизу контейнера */
+  background-color: #0a0e17; /* Фон под кнопками */
+  padding: 10px 0; /* Отступы сверху и снизу */
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 2px;
+  border: none;
+  background-color: #1b2838;
+  color: white;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1rem;
+}
+
+.pagination button.active {
+  background-color: #0875f5;
+}
+
+.pagination button:hover {
+  background-color: #065bb3;
+}
+
+.pagination-dots {
+  color: white;
+  padding: 5px;
+  font-size: 1rem;
 }
