@@ -5,15 +5,14 @@ const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/valu
 let players = [];
 let currentPage = 1;
 const pageSize = 8;
-const maxVisibleButtons = 5; // Количество одновременно видимых кнопок
+const maxVisibleButtons = 5;
 
-// Функция для загрузки игроков из Google Sheets
 function fetchPlayers() {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
       players = data.values
-        .filter((row) => row[8]) // Фильтруем строки с заполненным Status
+        .filter((row) => row[8])
         .map((row, index) => ({
           id: index + 1,
           timestamp: row[0],
@@ -26,8 +25,8 @@ function fetchPlayers() {
           replayCode: row[7],
           status: row[8],
         }));
-      displayPlayerList(); // Отображаем первую страницу
-      displayPagination(); // Отображаем кнопки пагинации
+      displayPlayerList();
+      displayPagination();
       checkUrlParams();
     })
     .catch((error) => {
@@ -35,7 +34,6 @@ function fetchPlayers() {
     });
 }
 
-// Функция для отображения списка игроков на текущей странице
 function displayPlayerList() {
   const list = document.getElementById("playerList");
   list.innerHTML = "";
@@ -53,7 +51,6 @@ function displayPlayerList() {
   });
 }
 
-// Функция для отображения кнопок пагинации
 function displayPagination() {
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
@@ -89,7 +86,6 @@ function displayPagination() {
   }
 }
 
-// Функция для создания кнопки пагинации
 function createPaginationButton(page, text) {
   const button = document.createElement("button");
   button.textContent = text;
@@ -102,7 +98,6 @@ function createPaginationButton(page, text) {
   return button;
 }
 
-// Функция для создания "..."
 function createPaginationDots() {
   const dots = document.createElement("span");
   dots.textContent = "...";
@@ -110,18 +105,15 @@ function createPaginationDots() {
   return dots;
 }
 
-// Функция для отображения деталей игрока
 function displayPlayerDetails(player) {
   const details = document.getElementById("detailsContainer");
 
-  // Определение пути к изображениям
   const rankImagesPath = "images/ranks/";
   const roleImagesPath = "images/roles/";
   const minRankImage = `${rankImagesPath}${player.minRank}.png`;
   const maxRankImage = `${rankImagesPath}${player.maxRank}.png`;
   const roleImage = `${roleImagesPath}${player.role}.png`;
 
-  // Проверяем наличие YouTube-ссылки
   const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
   const match = player.status?.match(youtubeRegex);
 
@@ -163,7 +155,49 @@ function displayPlayerDetails(player) {
   `;
 }
 
-// Инициализация
+function searchPlayer() {
+  const query = document.getElementById("search").value.toLowerCase();
+  const list = document.getElementById("playerList");
+  const pagination = document.getElementById("pagination");
+
+  const filteredPlayers = players.filter((player) =>
+    player.nickname.toLowerCase().includes(query)
+  );
+
+  if (query.length > 0) {
+    pagination.style.display = "none";
+  } else {
+    pagination.style.display = "flex";
+  }
+
+  list.innerHTML = "";
+
+  filteredPlayers.forEach((player) => {
+    const li = document.createElement("li");
+    li.textContent = player.nickname;
+    li.onclick = () => displayPlayerDetails(player);
+    list.appendChild(li);
+  });
+
+  if (filteredPlayers.length === 0) {
+    list.innerHTML = `<li style="text-align:center;">No players found</li>`;
+  }
+}
+
+function checkUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const nickname = params.get("player");
+  const id = params.get("id");
+  if (nickname && id) {
+    const player = players.find(
+      (p) => p.nickname === nickname && p.id === parseInt(id)
+    );
+    if (player) {
+      displayPlayerDetails(player);
+    }
+  }
+}
+
 window.onload = () => {
   fetchPlayers();
 };
