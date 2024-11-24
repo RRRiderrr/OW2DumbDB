@@ -7,6 +7,7 @@ let currentPage = 1;
 const pageSize = 8;
 const maxVisibleButtons = 5;
 
+// Функция для загрузки игроков из Google Sheets
 function fetchPlayers() {
   fetch(url)
     .then((response) => response.json())
@@ -34,6 +35,7 @@ function fetchPlayers() {
     });
 }
 
+// Функция для отображения списка игроков
 function displayPlayerList() {
   const list = document.getElementById("playerList");
   list.innerHTML = "";
@@ -51,6 +53,7 @@ function displayPlayerList() {
   });
 }
 
+// Функция для отображения пагинации
 function displayPagination() {
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
@@ -105,20 +108,31 @@ function createPaginationDots() {
   return dots;
 }
 
+// Функция для отображения деталей игрока
 function displayPlayerDetails(player) {
   const details = document.getElementById("detailsContainer");
 
+  // Обновляем URL с параметрами игрока
+  const url = new URL(window.location);
+  url.searchParams.set("player", player.nickname);
+  url.searchParams.set("id", player.id);
+  history.pushState(null, null, url.toString());
+
+  // Определение пути к изображениям
   const rankImagesPath = "images/ranks/";
   const roleImagesPath = "images/roles/";
   const minRankImage = `${rankImagesPath}${player.minRank}.png`;
   const maxRankImage = `${rankImagesPath}${player.maxRank}.png`;
   const roleImage = `${roleImagesPath}${player.role}.png`;
 
+  // Проверяем наличие YouTube-ссылки
   const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
   const match = player.status?.match(youtubeRegex);
 
+  // Убираем YouTube-ссылку из статуса
   const cleanStatus = player.status?.replace(youtubeRegex, "").replace(/\?.*/, "").trim();
 
+  // Создаём YouTube-видео, если есть
   let youtubeEmbed = "";
   if (match) {
     const youtubeVideoId = match[1] || match[2];
@@ -137,13 +151,28 @@ function displayPlayerDetails(player) {
     `;
   }
 
+  // Логика отображения рангов
+  let ranksHtml = "";
+  if (player.minRank === player.maxRank) {
+    // Если минимальный и максимальный ранги совпадают, отображаем только одну картинку на месте минимального ранга
+    ranksHtml = `
+      <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
+    `;
+  } else {
+    // Если ранги разные, отображаем обе картинки и разделитель
+    ranksHtml = `
+      <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
+      <span class="rank-separator">-</span>
+      <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
+    `;
+  }
+
+  // Очищаем контейнер и создаём новый контент
   details.innerHTML = `
     <div class="nickname-container">
       <span class="nickname">${player.nickname}</span>
       <div class="ranks">
-        <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
-        <span class="rank-separator">-</span>
-        <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
+        ${ranksHtml}
       </div>
     </div>
     <div class="role-container">
@@ -155,6 +184,7 @@ function displayPlayerDetails(player) {
   `;
 }
 
+// Функция для поиска игроков
 function searchPlayer() {
   const query = document.getElementById("search").value.toLowerCase();
   const list = document.getElementById("playerList");
@@ -180,12 +210,12 @@ function searchPlayer() {
     }
   } else {
     pagination.style.display = "flex";
-    currentPage = 1; // Сбрасываем на первую страницу
-    displayPlayerList();
+    displayPlayerList(); // Перерисовываем текущую страницу
     displayPagination();
   }
 }
 
+// Функция для проверки URL и загрузки игрока
 function checkUrlParams() {
   const params = new URLSearchParams(window.location.search);
   const nickname = params.get("player");
@@ -200,6 +230,7 @@ function checkUrlParams() {
   }
 }
 
+// Инициализация при загрузке страницы
 window.onload = () => {
   fetchPlayers();
 };

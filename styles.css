@@ -130,23 +130,22 @@ main {
 .nickname-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px; /* Отступ снизу */
+  justify-content: flex-start; /* Убираем лишний отступ */
+  margin-bottom: 10px; /* Уменьшаем отступ снизу */
 }
 
 /* Стиль для рангов */
 .ranks {
   display: flex;
   align-items: center;
-  justify-content: center; /* Гарантирует равномерное расположение */
-  margin-right: 600px; /* Оставляем вашу настройку ближе к никнейму */
+  margin-left: 20px; /* Уменьшаем отступ от никнейма */
 }
 
 /* Иконки рангов */
 .rank-icon {
   width: 120px; /* Увеличенная ширина */
   height: 120px; /* Увеличенная высота */
-  margin: 0 10px; /* Отступы с обеих сторон */
+  margin: 0 5px; /* Отступы с обеих сторон */
   cursor: pointer; /* Указываем, что можно навести */
   transition: transform 0.3s ease; /* Добавляем плавность для эффекта увеличения */
 }
@@ -158,12 +157,10 @@ main {
 
 /* Разделитель между рангами */
 .rank-separator {
-  font-family: 'BigNoodleTooOblique', sans-serif; /* Шрифт для разделителя */
-  font-size: 6rem; /* Размер текста */
-  color: #fff; /* Цвет текста */
-  margin: 0; /* Убираем любые дополнительные отступы */
-  display: flex;
-  align-items: center; /* Центрируем символ вертикально */
+  font-family: 'BigNoodleTooOblique', sans-serif;
+  font-size: 4rem; /* Уменьшаем размер разделителя */
+  color: #fff;
+  margin: 0 5px; /* Минимальные отступы */
 }
 
 /* Контейнер для роли */
