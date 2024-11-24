@@ -160,27 +160,29 @@ function searchPlayer() {
   const list = document.getElementById("playerList");
   const pagination = document.getElementById("pagination");
 
-  const filteredPlayers = players.filter((player) =>
-    player.nickname.toLowerCase().includes(query)
-  );
-
   if (query.length > 0) {
     pagination.style.display = "none";
+    const filteredPlayers = players.filter((player) =>
+      player.nickname.toLowerCase().includes(query)
+    );
+
+    list.innerHTML = "";
+
+    filteredPlayers.forEach((player) => {
+      const li = document.createElement("li");
+      li.textContent = player.nickname;
+      li.onclick = () => displayPlayerDetails(player);
+      list.appendChild(li);
+    });
+
+    if (filteredPlayers.length === 0) {
+      list.innerHTML = `<li style="text-align:center;">No players found</li>`;
+    }
   } else {
     pagination.style.display = "flex";
-  }
-
-  list.innerHTML = "";
-
-  filteredPlayers.forEach((player) => {
-    const li = document.createElement("li");
-    li.textContent = player.nickname;
-    li.onclick = () => displayPlayerDetails(player);
-    list.appendChild(li);
-  });
-
-  if (filteredPlayers.length === 0) {
-    list.innerHTML = `<li style="text-align:center;">No players found</li>`;
+    currentPage = 1; // Сбрасываем на первую страницу
+    displayPlayerList();
+    displayPagination();
   }
 }
 
