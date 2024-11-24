@@ -49,18 +49,81 @@ main {
   padding: 0;
 }
 
+/* Элементы списка игроков */
+.player-list {
+  position: relative; /* Для работы позиционирования */
+  padding-bottom: 50px; /* Оставляем место для кнопок пагинации */
+}
+
 .player-list li {
-  padding: 15px; /* Увеличен padding для удобства */
+  position: relative; /* Для работы псевдоэлемента */
+  padding: 15px;
   cursor: pointer;
   border-bottom: 1px solid #333;
   font-family: 'BigNoodleTooOblique', sans-serif; /* Шрифт для никнеймов */
-  font-size: 3rem; /* Увеличенный шрифт */
-  text-transform: uppercase; /* Для стиля */
+  font-size: 3rem;
+  text-transform: uppercase;
+  color: #fff;
+  transition: color 0.3s ease; /* Плавный переход цвета текста */
+  z-index: 1; /* Текст выше подсветки */
 }
 
+/* Эффект текста при наведении */
 .player-list li:hover {
-  background: #ff9f00;
-  color: #000;
+  color: #000; /* Меняем цвет текста при наведении */
+}
+
+/* Псевдоэлемент для подсветки */
+.player-list li::before {
+  content: '';
+  position: absolute;
+  top: 50%; /* Центрирование подсветки */
+  left: 0;
+  transform: translateY(-50%) skewX(-25deg); /* Скос + вертикальное выравнивание */
+  width: 0; /* Начальная ширина */
+  height: calc(100% - 10px); /* Высота с отступом */
+  background: #ff9f00; /* Цвет подсветки */
+  border-radius: 10px; /* Округлые углы */
+  z-index: -1; /* Помещаем за текст */
+  transition: all 0.3s ease; /* Плавная анимация */
+}
+
+/* Подсветка при наведении */
+.player-list li:hover::before {
+  width: 100%; /* Расширяем по всей ширине элемента */
+  height: calc(100% - 10px); /* Учитываем высоту элемента */
+}
+
+/* Блок кнопок пагинации */
+.pagination {
+  position: absolute;
+  bottom: 0; /* Кнопки фиксируются внизу списка */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+}
+
+/* Кнопка пагинации */
+.pagination button {
+  background: #1b2838;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Кнопка активной страницы */
+.pagination button.active {
+  background: #0875f5;
+  color: #fff;
+}
+
+/* Наведение на кнопку */
+.pagination button:hover {
+  background: #065bb3;
 }
 
 /* Детали игрока */
@@ -192,33 +255,6 @@ main {
   max-width: 480px; /* Максимальная ширина */
   height: 270px; /* Фиксированная высота */
   border: none; /* Убираем рамку */
-}
-#pagination {
-  display: flex;
-  justify-content: center;
-  position: sticky; /* Кнопки остаются видимыми при прокрутке */
-  bottom: 0; /* Расположены внизу контейнера */
-  background-color: #0a0e17; /* Фон под кнопками */
-  padding: 10px 0; /* Отступы сверху и снизу */
-}
-
-.pagination button {
-  padding: 5px 10px;
-  margin: 0 2px;
-  border: none;
-  background-color: #1b2838;
-  color: white;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 1rem;
-}
-
-.pagination button.active {
-  background-color: #0875f5;
-}
-
-.pagination button:hover {
-  background-color: #065bb3;
 }
 
 .pagination-dots {
