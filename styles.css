@@ -77,21 +77,23 @@ main {
 .player-list li::before {
   content: '';
   position: absolute;
-  top: 50%; /* Центрирование подсветки */
+  top: 0; /* Стартует сверху элемента */
   left: 0;
-  transform: translateY(-50%) skewX(-25deg); /* Скос + вертикальное выравнивание */
   width: 0; /* Начальная ширина */
-  height: calc(100% - 10px); /* Высота с отступом */
+  height: 100%; /* Высота совпадает с элементом */
   background: #ff9f00; /* Цвет подсветки */
   border-radius: 10px; /* Округлые углы */
+  transform: skewX(-25deg); /* Скос для диагональной формы */
+  transform-origin: left center; /* Точка трансформации */
   z-index: -1; /* Помещаем за текст */
   transition: all 0.3s ease; /* Плавная анимация */
+  opacity: 0; /* Скрываем элемент, когда он не активен */
 }
 
 /* Подсветка при наведении */
 .player-list li:hover::before {
   width: 100%; /* Расширяем по всей ширине элемента */
-  height: calc(100% - 10px); /* Учитываем высоту элемента */
+  opacity: 1; /* Делаем видимым */
 }
 
 /* Блок кнопок пагинации */
