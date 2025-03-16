@@ -327,19 +327,19 @@ main {
   /* Меньше шрифт никнейма */
   .nickname {
     font-size: 3rem;
-    margin-right: 0; /* Сбрасываем отступ, т.к. теперь иконки будут ниже */
+    margin-right: 0; 
   }
 
-  /* ВАЖНО: иконки рангов на мобилке ВСЕГДА на новой строке */
+  /* Иконки рангов на мобилке — на новой строке */
   .nickname-container {
-    flex-direction: column; /* ник сверху, иконки снизу */
+    flex-direction: column; 
     align-items: flex-start; 
   }
 
   .rank-icon {
-    width: 120px; /* можете менять под свои предпочтения */
+    width: 120px; 
     height: 120px;
-    margin: 5px 0; 
+    margin: 5px 0;
   }
 
   .role-icon {
