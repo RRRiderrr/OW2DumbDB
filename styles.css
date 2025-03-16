@@ -1,18 +1,19 @@
-/* Сбрасываем отступы и запрещаем горизонтальный скролл */
+/* Обнуляем отступы, запрещаем горизонтальный скролл */
 html, body {
   margin: 0;
   padding: 0;
   max-width: 100%;
-  overflow-x: hidden; /* убираем возможность листать влево-вправо */
-  background: #0a0e17;
+  overflow-x: hidden; 
+  background: #0a0e17; 
   color: #fff;
+  font-family: Arial, sans-serif; /* <-- Возвращаем Arial для общего текста */
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* Подключение шрифта */
+/* Подключение шрифта только для никнеймов */
 @font-face {
   font-family: 'BigNoodleTooOblique';
   src: url('fonts/bignoodletoooblique.ttf') format('truetype');
@@ -39,7 +40,7 @@ input#search {
 main {
   display: flex;
   padding: 20px;
-  /* Перестраховка, чтобы контент не вылезал */
+  /* Перестраховка, чтобы блоки не вылезали */
   flex-wrap: nowrap; 
 }
 
@@ -63,7 +64,7 @@ main {
   width: 30%;
   border-right: 1px solid #333;
   padding: 20px;
-  max-height: 80vh; /* Скролл внутри списка (при желании можете убрать) */
+  max-height: 80vh; /* Скролл внутри списка (при желании можно убрать) */
   overflow-y: auto;
 }
 
@@ -73,12 +74,13 @@ main {
   margin: 0;
 }
 
+/* Тут BigNoodle только для ников в списке */
 .player-list li {
   position: relative;
   padding: 15px;
   cursor: pointer;
   border-bottom: 1px solid #333;
-  font-family: 'BigNoodleTooOblique', sans-serif;
+  font-family: 'BigNoodleTooOblique', sans-serif; /* Никнеймы в BigNoodle */
   font-size: 3rem;
   text-transform: uppercase;
   color: #fff;
@@ -113,7 +115,7 @@ main {
   opacity: 1;
 }
 
-/* Пагинация в потоке (не absolute), чтобы не наезжала на последний элемент */
+/* Пагинация в потоке (не absolute) */
 .pagination {
   margin-top: 15px;
   display: flex;
@@ -149,19 +151,18 @@ main {
 .player-details {
   width: 70%;
   padding: 20px;
-  /* Если хотите, чтобы при слишком маленьком экране 
-     это не разъезжалось, можно добавить min-width: 0; */
 }
 
+/* Карточка деталей */
 #detailsContainer {
   background: #1b2838;
   padding: 20px;
   border-radius: 10px;
-  font-size: 1.2rem;
-  min-height: 200px; /* Чтобы блок не схлопывался */
+  font-size: 1.2rem; 
+  min-height: 200px; 
 }
 
-/* --- Раскладка никнейма и рангов с переносом, если не хватает места --- */
+/* Никнейм в BigNoodle; все остальные тексты (Situation, Status) — Arial */
 .nickname-container {
   display: flex;
   flex-wrap: wrap;  /* разрешаем перенос */
@@ -169,19 +170,19 @@ main {
   margin-bottom: 10px;
 }
 
-/* Сам никнейм */
+/* Сам никнейм крупно */
 .nickname {
   font-family: 'BigNoodleTooOblique', sans-serif;
   font-size: 6rem;
   color: #fff;
   text-transform: uppercase;
-  margin-right: 20px; /* небольшой отступ от рангов */
+  margin-right: 20px;
 }
 
 /* Контейнер с рангами */
 .ranks {
   display: flex;
-  flex-wrap: wrap; /* Разрешаем перенос иконок, если не влазят */
+  flex-wrap: wrap; /* разрешаем перенос */
   align-items: center;
 }
 
@@ -192,7 +193,6 @@ main {
   margin: 0 5px;
   cursor: pointer;
   transition: transform 0.3s ease;
-  /* Чтобы не вылезало за 100% при мелком экране */
   max-width: 100%;
 }
 
@@ -200,15 +200,14 @@ main {
   transform: scale(1.1);
 }
 
-/* Разделитель между рангов */
 .rank-separator {
-  font-family: 'BigNoodleTooOblique', sans-serif;
+  font-family: 'BigNoodleTooOblique', sans-serif; 
   font-size: 4rem;
   color: #fff;
   margin: 0 5px;
 }
 
-/* Контейнер для роли */
+/* Роль */
 .role-container {
   margin-top: 0px;
   text-align: left;
@@ -243,7 +242,7 @@ main {
   border: none;
 }
 
-/* На ПК: кнопка зафиксирована в правом нижнем углу */
+/* Кнопка на ПК (и больших экранах) фиксирована в правом нижнем углу */
 .publish-button {
   position: fixed;
   bottom: 20px;
@@ -251,7 +250,6 @@ main {
   background-color: #0875f5;
   color: #fff;
   font-size: 1.2rem;
-  font-family: Arial, sans-serif;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -273,7 +271,7 @@ main {
 /* Для экранов до 992px (примерно планшеты) */
 @media (max-width: 992px) {
   main {
-    flex-wrap: wrap; /* чтобы блоки могли переноситься */
+    flex-wrap: wrap; 
   }
 
   .player-list {
@@ -299,9 +297,8 @@ main {
   }
 }
 
-/* Для экранов до 768px (смартфоны и маленькие планшеты) */
+/* Для экранов до 768px (смартфоны) */
 @media (max-width: 768px) {
-  /* В один столбик */
   main {
     flex-direction: column;
     padding: 10px;
@@ -324,17 +321,14 @@ main {
     margin-top: 10px;
   }
 
-  /* Меньше шрифт у списка */
   .player-list li {
     font-size: 2rem;
   }
 
-  /* Меньше шрифт никнейма */
   .nickname {
     font-size: 3rem;
   }
 
-  /* Меньше иконки */
   .rank-icon {
     width: 80px;
     height: 80px;
@@ -344,13 +338,12 @@ main {
     height: 50px;
   }
 
-  /* YouTube iframe растягиваем на всю ширину */
   .youtube-container iframe {
     max-width: 100%;
     height: auto;
   }
 
-  /* На мобильном: кнопка «едет» со скроллом */
+  /* На мобильном: кнопка идёт в потоке (не fixed) */
   .publish-button {
     position: static;
     margin: 20px auto;
@@ -358,7 +351,7 @@ main {
   }
 }
 
-/* Класс для уменьшения ранговых иконок, если ник слишком длинный */
+/* Класс для уменьшения рангов, если ник слишком длинный (JS добавляет/убирает) */
 .long-nickname .rank-icon {
   width: 80px;
   height: 80px;
