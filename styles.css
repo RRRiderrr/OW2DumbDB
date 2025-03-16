@@ -56,12 +56,9 @@ main {
 .player-list {
   width: 30%;
   border-right: 1px solid #333;
-  /* Увеличиваем нижний внутренний отступ, 
-     чтобы пагинация не наезжала на последний элемент */
-  padding: 20px 20px 80px; 
-  max-height: 80vh; /* Ограничиваем высоту списка */
-  overflow-y: auto; /* Скролл, если список большой */
-  position: relative;
+  padding: 20px;
+  max-height: 80vh; /* При желании можно убрать, если не нужен скролл */
+  overflow-y: auto; 
   box-sizing: border-box;
 }
 
@@ -81,7 +78,7 @@ main {
   text-transform: uppercase;
   color: #fff;
   transition: color 0.3s ease;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .player-list li:hover {
@@ -103,7 +100,7 @@ main {
   z-index: -1;
   transition: all 0.3s ease;
   opacity: 0;
-  pointer-events: none; /* чтобы не блокировало клики по пагинации */
+  pointer-events: none; /* Чтобы подсветка не "съедала" клики */
 }
 
 .player-list li:hover::before {
@@ -111,16 +108,12 @@ main {
   opacity: 1;
 }
 
-/* Пагинация */
+/* Пагинация — идёт потоком (позиция static), чтобы не наезжать на последний элемент */
 .pagination {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 15px; /* Отступ сверху от последнего игрока */
   display: flex;
   gap: 5px;
-  margin: 0;
-  z-index: 10; /* выше списка */
+  justify-content: center; /* Центрируем кнопки */
 }
 
 .pagination button {
@@ -238,10 +231,10 @@ main {
   border: none;
 }
 
-/* Фиксированная кнопка */
+/* Фиксированная кнопка всегда на одном месте в углу */
 .publish-button {
   position: fixed;
-  bottom: 20px;
+  bottom: 20px;   /* Если на некоторых телефонах съезжает под "вырез", можно увеличить, например 60px */
   right: 20px;
   background-color: #0875f5;
   color: #fff;
@@ -255,7 +248,7 @@ main {
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, transform 0.3s ease;
-  z-index: 9999; /* чтобы она всегда была поверх */
+  z-index: 9999; /* Чтобы поверх всего */
 }
 
 .publish-button:hover {
@@ -265,18 +258,17 @@ main {
 
 /* ====== Адаптивные стили ====== */
 
-/* 1) Для экранов до 992px (примерно планшеты в ландшафтной ориентации) */
+/* 1) Для экранов до 992px (примерно планшеты) */
 @media (max-width: 992px) {
   main {
     flex-wrap: wrap;
   }
 
-  /* Немного сужаем пропорции — 40%/60% */
+  /* Пропорции — 40%/60% */
   .player-list {
     width: 40%;
     border-right: 1px solid #333;
     border-bottom: none;
-    padding-bottom: 80px;
     max-height: none;
   }
 
@@ -285,12 +277,9 @@ main {
     margin-top: 0;
   }
 
-  /* Уменьшим шрифт у пунктов списка */
   .player-list li {
     font-size: 2.5rem;
   }
-
-  /* Уменьшим иконки рангов чуть-чуть */
   .rank-icon {
     width: 100px;
     height: 100px;
@@ -301,7 +290,7 @@ main {
   }
 }
 
-/* 2) Для экранов до 768px (смартфоны и маленькие планшеты) */
+/* 2) Для экранов до 768px (смартфоны) */
 @media (max-width: 768px) {
   /* Уходим в столбик */
   main {
@@ -319,19 +308,13 @@ main {
     border-right: none;
     border-bottom: 1px solid #333;
     max-height: unset;
-    position: static;
-    padding-bottom: 80px; /* чтоб пагинация тоже поместилась */
+    padding-bottom: 20px; 
   }
 
-  /* Пагинацию ставим обычным блоком снизу списка */
   .pagination {
-    position: static;
-    transform: none;
     margin-top: 10px;
-    justify-content: center;
   }
 
-  /* Размер шрифта ещё уменьшим */
   .player-list li {
     font-size: 2rem;
   }
@@ -349,7 +332,6 @@ main {
     height: 50px;
   }
 
-  /* YouTube iframe растягиваем на всю ширину */
   .youtube-container iframe {
     max-width: 100%;
     height: auto;
