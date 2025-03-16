@@ -1,16 +1,21 @@
+/* Сбрасываем отступы и запрещаем горизонтальный скролл */
+html, body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden; /* убираем возможность листать влево-вправо */
+  background: #0a0e17;
+  color: #fff;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Подключение шрифта */
 @font-face {
   font-family: 'BigNoodleTooOblique';
   src: url('fonts/bignoodletoooblique.ttf') format('truetype');
-}
-
-/* Общие стили страницы */
-body {
-  font-family: Arial, sans-serif;
-  background: #0a0e17;
-  color: #fff;
-  margin: 0;
-  padding: 0;
 }
 
 /* Шапка */
@@ -34,7 +39,8 @@ input#search {
 main {
   display: flex;
   padding: 20px;
-  box-sizing: border-box; /* Чтобы padding не "наезжал" */
+  /* Перестраховка, чтобы контент не вылезал */
+  flex-wrap: nowrap; 
 }
 
 /* Логотип */
@@ -57,9 +63,8 @@ main {
   width: 30%;
   border-right: 1px solid #333;
   padding: 20px;
-  max-height: 80vh; /* Если не нужно ограничение высоты со скроллом — уберите */
-  overflow-y: auto; 
-  box-sizing: border-box;
+  max-height: 80vh; /* Скролл внутри списка (при желании можете убрать) */
+  overflow-y: auto;
 }
 
 .player-list ul {
@@ -100,7 +105,7 @@ main {
   z-index: -1;
   transition: all 0.3s ease;
   opacity: 0;
-  pointer-events: none; /* Чтобы подсветка не "съедала" клики */
+  pointer-events: none; /* чтобы не перехватывало клики */
 }
 
 .player-list li:hover::before {
@@ -108,12 +113,12 @@ main {
   opacity: 1;
 }
 
-/* Пагинация в потоке, чтобы не наезжать на последний элемент */
+/* Пагинация в потоке (не absolute), чтобы не наезжала на последний элемент */
 .pagination {
-  margin-top: 15px; /* Отступ сверху от последнего игрока */
+  margin-top: 15px;
   display: flex;
   gap: 5px;
-  justify-content: center; /* Центрируем кнопки */
+  justify-content: center; 
 }
 
 .pagination button {
@@ -128,7 +133,6 @@ main {
 
 .pagination button.active {
   background: #0875f5;
-  color: #fff;
 }
 
 .pagination button:hover {
@@ -145,7 +149,8 @@ main {
 .player-details {
   width: 70%;
   padding: 20px;
-  box-sizing: border-box;
+  /* Если хотите, чтобы при слишком маленьком экране 
+     это не разъезжалось, можно добавить min-width: 0; */
 }
 
 #detailsContainer {
@@ -154,31 +159,30 @@ main {
   border-radius: 10px;
   font-size: 1.2rem;
   min-height: 200px; /* Чтобы блок не схлопывался */
-  /* Применяем/убираем класс в JS при длинном никнейме */
 }
 
-#detailsContainer .nickname {
-  font-family: 'BigNoodleTooOblique', sans-serif;
-  font-size: 6rem;
-  color: #fff;
-  text-transform: uppercase;
-}
-
-#detailsContainer strong {
-  font-weight: normal;
-}
-
-/* Контейнер для никнейма и рангов */
+/* --- Раскладка никнейма и рангов с переносом, если не хватает места --- */
 .nickname-container {
   display: flex;
+  flex-wrap: wrap;  /* разрешаем перенос */
   align-items: center;
   margin-bottom: 10px;
 }
 
+/* Сам никнейм */
+.nickname {
+  font-family: 'BigNoodleTooOblique', sans-serif;
+  font-size: 6rem;
+  color: #fff;
+  text-transform: uppercase;
+  margin-right: 20px; /* небольшой отступ от рангов */
+}
+
+/* Контейнер с рангами */
 .ranks {
   display: flex;
+  flex-wrap: wrap; /* Разрешаем перенос иконок, если не влазят */
   align-items: center;
-  margin-left: 20px;
 }
 
 /* Иконки рангов */
@@ -188,6 +192,8 @@ main {
   margin: 0 5px;
   cursor: pointer;
   transition: transform 0.3s ease;
+  /* Чтобы не вылезало за 100% при мелком экране */
+  max-width: 100%;
 }
 
 .rank-icon:hover {
@@ -206,6 +212,9 @@ main {
 .role-container {
   margin-top: 0px;
   text-align: left;
+  display: flex;
+  flex-wrap: wrap; 
+  align-items: center;
 }
 
 .role-icon {
@@ -213,6 +222,8 @@ main {
   height: 86px;
   cursor: pointer;
   transition: transform 0.3s ease;
+  max-width: 100%;
+  margin-bottom: 10px;
 }
 
 .role-icon:hover {
@@ -232,7 +243,7 @@ main {
   border: none;
 }
 
-/* На ПК (и больших экранах) кнопка внизу справа, зафиксирована */
+/* На ПК: кнопка зафиксирована в правом нижнем углу */
 .publish-button {
   position: fixed;
   bottom: 20px;
@@ -259,23 +270,20 @@ main {
 
 /* ====== Адаптивные стили ====== */
 
-/* 1) Для экранов до 992px (примерно планшеты) */
+/* Для экранов до 992px (примерно планшеты) */
 @media (max-width: 992px) {
   main {
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* чтобы блоки могли переноситься */
   }
 
-  /* Пропорции — 40%/60% */
   .player-list {
     width: 40%;
     border-right: 1px solid #333;
-    border-bottom: none;
     max-height: none;
   }
 
   .player-details {
     width: 60%;
-    margin-top: 0;
   }
 
   .player-list li {
@@ -291,15 +299,14 @@ main {
   }
 }
 
-/* 2) Для экранов до 768px (смартфоны и маленькие планшеты) */
+/* Для экранов до 768px (смартфоны и маленькие планшеты) */
 @media (max-width: 768px) {
-  /* Верстаем в один столбик */
+  /* В один столбик */
   main {
     flex-direction: column;
     padding: 10px;
   }
 
-  /* Список и детали на всю ширину */
   .player-list,
   .player-details {
     width: 100%;
@@ -317,15 +324,17 @@ main {
     margin-top: 10px;
   }
 
-  /* Уменьшаем размер шрифта */
+  /* Меньше шрифт у списка */
   .player-list li {
     font-size: 2rem;
   }
 
-  #detailsContainer .nickname {
+  /* Меньше шрифт никнейма */
+  .nickname {
     font-size: 3rem;
   }
 
+  /* Меньше иконки */
   .rank-icon {
     width: 80px;
     height: 80px;
@@ -341,27 +350,21 @@ main {
     height: auto;
   }
 
-  /* --- На мобильном: кнопка «едет» со скроллом --- */
+  /* На мобильном: кнопка «едет» со скроллом */
   .publish-button {
-    position: static;       
-    margin: 20px auto;      
+    position: static;
+    margin: 20px auto;
     display: block;
   }
 }
 
-/* ================ УМЕНЬШЕННЫЕ РАЗМЕРЫ ПРИ ДЛИННОМ НИКЕЙМЕ ================ */
-
-/*
-   Срабатывает, если JS-логика решит, 
-   что nickname слишком длинный, и добавит .long-nickname 
-   на #detailsContainer
-*/
+/* Класс для уменьшения ранговых иконок, если ник слишком длинный */
 .long-nickname .rank-icon {
   width: 80px;
   height: 80px;
-  margin: 0 3px; /* Чуть уменьшаем отступы */
+  margin: 0 3px;
 }
 
 .long-nickname .rank-separator {
-  font-size: 2rem; /* Понижаем размер разделителя */
+  font-size: 2rem;
 }
