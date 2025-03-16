@@ -264,3 +264,60 @@ main {
   padding: 5px;
   font-size: 1rem;
 }
+
+/* Адаптив: для устройств с шириной экрана меньше или равной 768px */
+@media (max-width: 768px) {
+  /* Переключаемся с layout "в линию" на layout "в столбик" */
+  main {
+    flex-direction: column;
+    padding: 10px; /* Можно чуть уменьшить отступы */
+  }
+
+  /* Список игроков и детали игрока теперь занимают всю ширину */
+  .player-list,
+  .player-details {
+    width: 100%;
+    padding: 10px;
+  }
+
+  /* Вместо границы справа используем границу снизу, 
+     чтобы визуально отделить список игроков от деталей */
+  .player-list {
+    border-right: none;
+    border-bottom: 1px solid #333;
+    max-height: unset; /* Убираем фиксированную высоту, чтобы не было обрезки */
+  }
+
+  /* Размеры заголовков, текста и т.д. подгоняем под мобильный экран */
+  .player-list li {
+    font-size: 2rem; /* Чуть меньше, чем 3rem */
+    padding: 10px; 
+  }
+
+  /* Уменьшаем размер никнейма при деталях */
+  #detailsContainer .nickname {
+    font-size: 4rem; 
+  }
+
+  /* Уменьшаем иконки рангов, ролей и ютуб-фрейм */
+  .rank-icon {
+    width: 80px; 
+    height: 80px;
+  }
+  .role-icon {
+    width: 60px;
+    height: 50px;
+  }
+  .youtube-container iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Центрируем кнопки пагинации */
+  .pagination {
+    position: static; 
+    transform: none; 
+    margin-top: 10px;
+    justify-content: center;
+  }
+}
