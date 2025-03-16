@@ -47,23 +47,24 @@ main {
 }
 
 .logo-icon {
-  width: 57px; 
-  height: 40px; 
-  margin-right: 10px; 
+  width: 57px;
+  height: 40px;
+  margin-right: 10px;
 }
 
 /* Блок "Список игроков" */
 .player-list {
   width: 30%;
   border-right: 1px solid #333;
-  padding: 20px;
+  /* Увеличиваем нижний внутренний отступ, 
+     чтобы пагинация не наезжала на последний элемент */
+  padding: 20px 20px 80px; 
   max-height: 80vh; /* Ограничиваем высоту списка */
   overflow-y: auto; /* Скролл, если список большой */
   position: relative;
   box-sizing: border-box;
 }
 
-/* Немного "дублируем" свойства, чтобы явнее */
 .player-list ul {
   list-style-type: none;
   padding: 0;
@@ -71,7 +72,7 @@ main {
 }
 
 .player-list li {
-  position: relative; 
+  position: relative;
   padding: 15px;
   cursor: pointer;
   border-bottom: 1px solid #333;
@@ -80,11 +81,11 @@ main {
   text-transform: uppercase;
   color: #fff;
   transition: color 0.3s ease;
-  z-index: 1;
+  z-index: 1; 
 }
 
 .player-list li:hover {
-  color: #000; 
+  color: #000;
 }
 
 /* Подсветка при наведении (псевдоэлемент) */
@@ -93,7 +94,7 @@ main {
   position: absolute;
   top: 0;
   left: 0;
-  width: 0; 
+  width: 0;
   height: 100%;
   background: #ff9f00;
   border-radius: 10px;
@@ -102,8 +103,7 @@ main {
   z-index: -1;
   transition: all 0.3s ease;
   opacity: 0;
-  /* Важно: чтобы не «отъедало» клики у пагинации */
-  pointer-events: none;
+  pointer-events: none; /* чтобы не блокировало клики по пагинации */
 }
 
 .player-list li:hover::before {
@@ -114,13 +114,13 @@ main {
 /* Пагинация */
 .pagination {
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 5px;
-  margin-bottom: 10px;
-  z-index: 10; /* Поднимаем над списком */
+  margin: 0;
+  z-index: 10; /* выше списка */
 }
 
 .pagination button {
@@ -160,7 +160,7 @@ main {
   padding: 20px;
   border-radius: 10px;
   font-size: 1.2rem;
-  min-height: 200px; /* Чтоб блок не схлопывался */
+  min-height: 200px; /* Чтобы блок не схлопывался */
 }
 
 #detailsContainer .nickname {
@@ -171,33 +171,33 @@ main {
 }
 
 #detailsContainer strong {
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 /* Контейнер для никнейма и рангов */
 .nickname-container {
   display: flex;
   align-items: center;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .ranks {
   display: flex;
   align-items: center;
-  margin-left: 20px; 
+  margin-left: 20px;
 }
 
 /* Иконки рангов */
 .rank-icon {
-  width: 120px; 
-  height: 120px; 
-  margin: 0 5px; 
-  cursor: pointer; 
+  width: 120px;
+  height: 120px;
+  margin: 0 5px;
+  cursor: pointer;
   transition: transform 0.3s ease;
 }
 
 .rank-icon:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
 /* Разделитель между рангов */
@@ -211,13 +211,13 @@ main {
 /* Контейнер для роли */
 .role-container {
   margin-top: 0px;
-  text-align: left; 
+  text-align: left;
 }
 
 .role-icon {
-  width: 100px; 
-  height: 86px; 
-  cursor: pointer; 
+  width: 100px;
+  height: 86px;
+  cursor: pointer;
   transition: transform 0.3s ease;
 }
 
@@ -228,14 +228,14 @@ main {
 /* YouTube-вставки */
 .youtube-container {
   margin-top: 20px;
-  text-align: center; 
+  text-align: center;
 }
 
 .youtube-container iframe {
-  width: 100%; 
-  max-width: 480px; 
-  height: 270px; 
-  border: none; 
+  width: 100%;
+  max-width: 480px;
+  height: 270px;
+  border: none;
 }
 
 /* Фиксированная кнопка */
@@ -251,14 +251,15 @@ main {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  text-decoration: none; 
+  text-decoration: none;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, transform 0.3s ease;
+  z-index: 9999; /* чтобы она всегда была поверх */
 }
 
 .publish-button:hover {
-  background-color: #065bb3; 
+  background-color: #065bb3;
   transform: scale(1.05);
 }
 
@@ -267,21 +268,21 @@ main {
 /* 1) Для экранов до 992px (примерно планшеты в ландшафтной ориентации) */
 @media (max-width: 992px) {
   main {
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
   }
 
   /* Немного сужаем пропорции — 40%/60% */
   .player-list {
     width: 40%;
     border-right: 1px solid #333;
-    border-bottom: none; 
-    padding-bottom: 50px; 
-    max-height: none; 
+    border-bottom: none;
+    padding-bottom: 80px;
+    max-height: none;
   }
 
   .player-details {
     width: 60%;
-    margin-top: 0; 
+    margin-top: 0;
   }
 
   /* Уменьшим шрифт у пунктов списка */
@@ -319,7 +320,7 @@ main {
     border-bottom: 1px solid #333;
     max-height: unset;
     position: static;
-    padding-bottom: 15px;
+    padding-bottom: 80px; /* чтоб пагинация тоже поместилась */
   }
 
   /* Пагинацию ставим обычным блоком снизу списка */
