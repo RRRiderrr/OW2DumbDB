@@ -1,3 +1,4 @@
+// Пример ваших актуальных настроек
 const spreadsheetId = "1XsEzpmbQv4cFJjAgfROMPD7TEOy_gn22_IaPje4ZSRw";
 const apiKey = "AIzaSyAAahivxgg6dlHcjc26wF326qYg2fXXrqw";
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/DumbDB!A2:I1000?key=${apiKey}`;
@@ -13,7 +14,7 @@ function fetchPlayers() {
     .then((response) => response.json())
     .then((data) => {
       players = data.values
-        .filter((row) => row[8]) // row[8] — статус; фильтруем пустые
+        .filter((row) => row[8]) // row[8] — статус
         .map((row, index) => ({
           id: index + 1,
           timestamp: row[0],
@@ -42,7 +43,6 @@ function displayPlayerList() {
 
   const start = (currentPage - 1) * pageSize;
   const end = start + pageSize;
-
   const playersToDisplay = players.slice(start, end);
 
   playersToDisplay.forEach((player) => {
@@ -92,7 +92,7 @@ function displayPagination() {
 function createPaginationButton(page, text) {
   const button = document.createElement("button");
   button.textContent = text;
-  button.className = (page === currentPage) ? "active" : "";
+  button.className = page === currentPage ? "active" : "";
   button.onclick = () => {
     currentPage = page;
     displayPlayerList();
@@ -128,10 +128,8 @@ function displayPlayerDetails(player) {
   // Проверяем наличие YouTube-ссылки
   const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
   const match = player.status?.match(youtubeRegex);
-  // Убираем YouTube-ссылку из статуса
   const cleanStatus = player.status?.replace(youtubeRegex, "").replace(/\?.*/, "").trim();
 
-  // Вставляем YouTube, если есть
   let youtubeEmbed = "";
   if (match) {
     const youtubeVideoId = match[1] || match[2];
@@ -139,7 +137,6 @@ function displayPlayerDetails(player) {
       <div class="youtube-container">
         <iframe
           src="https://www.youtube.com/embed/${youtubeVideoId}"
-          title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
@@ -151,24 +148,15 @@ function displayPlayerDetails(player) {
   // Ранги
   let ranksHtml = "";
   if (player.minRank === player.maxRank) {
-    // Одинаковые ранги
     ranksHtml = `
       <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
     `;
   } else {
-    // Два разных ранга
     ranksHtml = `
       <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
       <span class="rank-separator">-</span>
       <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
     `;
-  }
-
-  // Проверяем длину никнейма, чтобы уменьшать иконки при необходимости
-  if (player.nickname && player.nickname.length > 10) {
-    details.classList.add("long-nickname");
-  } else {
-    details.classList.remove("long-nickname");
   }
 
   // Формируем контент карточки
@@ -201,7 +189,6 @@ function searchPlayer() {
     );
 
     list.innerHTML = "";
-
     if (filteredPlayers.length === 0) {
       list.innerHTML = `<li style="text-align:center;">No players found</li>`;
     } else {
@@ -219,7 +206,7 @@ function searchPlayer() {
   }
 }
 
-// Проверка URL (при перезагрузке страницы)
+// Проверка URL (при перезагрузке)
 function checkUrlParams() {
   const params = new URLSearchParams(window.location.search);
   const nickname = params.get("player");
