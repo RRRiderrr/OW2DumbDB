@@ -154,6 +154,7 @@ main {
   border-radius: 10px;
   font-size: 1.2rem;
   min-height: 200px; /* Чтобы блок не схлопывался */
+  /* Применяем/убираем класс в JS при длинном никнейме */
 }
 
 #detailsContainer .nickname {
@@ -340,10 +341,27 @@ main {
     height: auto;
   }
 
-  /* --- Ключевое отличие на мобильном: кнопка «едет» со скроллом --- */
+  /* --- На мобильном: кнопка «едет» со скроллом --- */
   .publish-button {
-    position: static;       /* «Сбрасываем» фиксированное положение */
-    margin: 20px auto;      /* Чтобы она была по центру внизу */
+    position: static;       
+    margin: 20px auto;      
     display: block;
   }
+}
+
+/* ================ УМЕНЬШЕННЫЕ РАЗМЕРЫ ПРИ ДЛИННОМ НИКЕЙМЕ ================ */
+
+/*
+   Срабатывает, если JS-логика решит, 
+   что nickname слишком длинный, и добавит .long-nickname 
+   на #detailsContainer
+*/
+.long-nickname .rank-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 3px; /* Чуть уменьшаем отступы */
+}
+
+.long-nickname .rank-separator {
+  font-size: 2rem; /* Понижаем размер разделителя */
 }
