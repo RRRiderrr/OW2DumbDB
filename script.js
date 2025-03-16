@@ -1,3 +1,4 @@
+// Ваш оригинальный код
 const spreadsheetId = "1XsEzpmbQv4cFJjAgfROMPD7TEOy_gn22_IaPje4ZSRw";
 const apiKey = "AIzaSyAAahivxgg6dlHcjc26wF326qYg2fXXrqw";
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/DumbDB!A2:I1000?key=${apiKey}`;
@@ -138,13 +139,13 @@ function displayPlayerDetails(player) {
     const youtubeVideoId = match[1] || match[2];
     youtubeEmbed = `
       <div class="youtube-container">
-        <iframe 
-          width="560" 
-          height="315" 
-          src="https://www.youtube.com/embed/${youtubeVideoId}" 
-          title="YouTube video player" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/${youtubeVideoId}"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
         </iframe>
       </div>
@@ -165,6 +166,14 @@ function displayPlayerDetails(player) {
       <span class="rank-separator">-</span>
       <img src="${maxRankImage}" alt="${player.maxRank}" class="rank-icon" title="${player.maxRank}">
     `;
+  }
+
+  // --- Проверка длины никнейма (пример: более 10 символов) ---
+  if (player.nickname && player.nickname.length > 10) {
+    // Добавляем класс long-nickname к detailsContainer
+    details.classList.add("long-nickname");
+  } else {
+    details.classList.remove("long-nickname");
   }
 
   // Очищаем контейнер и создаём новый контент
