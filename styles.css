@@ -102,6 +102,8 @@ main {
   z-index: -1;
   transition: all 0.3s ease;
   opacity: 0;
+  /* Важно: чтобы не «отъедало» клики у пагинации */
+  pointer-events: none;
 }
 
 .player-list li:hover::before {
@@ -118,6 +120,7 @@ main {
   display: flex;
   gap: 5px;
   margin-bottom: 10px;
+  z-index: 10; /* Поднимаем над списком */
 }
 
 .pagination button {
@@ -286,7 +289,7 @@ main {
     font-size: 2.5rem;
   }
 
-  /* Уменьшим иконки ранга чуть-чуть */
+  /* Уменьшим иконки рангов чуть-чуть */
   .rank-icon {
     width: 100px;
     height: 100px;
