@@ -1,20 +1,30 @@
-// Пример ваших актуальных настроек
 const spreadsheetId = "1XsEzpmbQv4cFJjAgfROMPD7TEOy_gn22_IaPje4ZSRw";
 const apiKey = "AIzaSyAAahivxgg6dlHcjc26wF326qYg2fXXrqw";
-const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/DumbDB!A2:I1000?key=${apiKey}`;
+
+// 1) Важно: заменяем DumbDB!A2:I1000 на "Overwatch 2!A2:I1000"
+const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Overwatch 2!A2:I1000?key=${apiKey}`;
 
 let players = [];
 let currentPage = 1;
 const pageSize = 8;
 const maxVisibleButtons = 5;
 
-// Загрузка игроков
 function fetchPlayers() {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
+      // data.values будет массивом строк, где:
+      // A - Timestamp
+      // B - Email
+      // C - Nickname
+      // D - Role
+      // E - Situation
+      // F - MinRank
+      // G - MaxRank
+      // H - ReplayCode
+      // I - Status
       players = data.values
-        .filter((row) => row[8]) // row[8] — статус
+        .filter((row) => row[8]) // row[8] — status, убираем пустые
         .map((row, index) => ({
           id: index + 1,
           timestamp: row[0],
@@ -36,7 +46,7 @@ function fetchPlayers() {
     });
 }
 
-// Список игроков
+// Отрисовка списка
 function displayPlayerList() {
   const list = document.getElementById("playerList");
   list.innerHTML = "";
@@ -128,6 +138,7 @@ function displayPlayerDetails(player) {
   // Проверяем наличие YouTube-ссылки
   const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
   const match = player.status?.match(youtubeRegex);
+  // Удаляем саму ссылку из статуса
   const cleanStatus = player.status?.replace(youtubeRegex, "").replace(/\?.*/, "").trim();
 
   let youtubeEmbed = "";
@@ -148,10 +159,12 @@ function displayPlayerDetails(player) {
   // Ранги
   let ranksHtml = "";
   if (player.minRank === player.maxRank) {
+    // один и тот же ранг
     ranksHtml = `
       <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
     `;
   } else {
+    // два разных ранга
     ranksHtml = `
       <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
       <span class="rank-separator">-</span>
@@ -189,6 +202,7 @@ function searchPlayer() {
     );
 
     list.innerHTML = "";
+
     if (filteredPlayers.length === 0) {
       list.innerHTML = `<li style="text-align:center;">No players found</li>`;
     } else {
@@ -206,7 +220,7 @@ function searchPlayer() {
   }
 }
 
-// Проверка URL (при перезагрузке)
+// Считываем параметры из URL при загрузке
 function checkUrlParams() {
   const params = new URLSearchParams(window.location.search);
   const nickname = params.get("player");
@@ -221,7 +235,6 @@ function checkUrlParams() {
   }
 }
 
-// Инициализация
 window.onload = () => {
   fetchPlayers();
 };
