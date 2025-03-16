@@ -1,4 +1,3 @@
-// Ваш оригинальный код
 const spreadsheetId = "1XsEzpmbQv4cFJjAgfROMPD7TEOy_gn22_IaPje4ZSRw";
 const apiKey = "AIzaSyAAahivxgg6dlHcjc26wF326qYg2fXXrqw";
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/DumbDB!A2:I1000?key=${apiKey}`;
@@ -8,13 +7,13 @@ let currentPage = 1;
 const pageSize = 8;
 const maxVisibleButtons = 5;
 
-// Функция для загрузки игроков из Google Sheets
+// Загрузка игроков
 function fetchPlayers() {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
       players = data.values
-        .filter((row) => row[8])
+        .filter((row) => row[8]) // row[8] — статус; фильтруем пустые
         .map((row, index) => ({
           id: index + 1,
           timestamp: row[0],
@@ -36,7 +35,7 @@ function fetchPlayers() {
     });
 }
 
-// Функция для отображения списка игроков
+// Список игроков
 function displayPlayerList() {
   const list = document.getElementById("playerList");
   list.innerHTML = "";
@@ -54,7 +53,7 @@ function displayPlayerList() {
   });
 }
 
-// Функция для отображения пагинации
+// Пагинация
 function displayPagination() {
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
@@ -93,7 +92,7 @@ function displayPagination() {
 function createPaginationButton(page, text) {
   const button = document.createElement("button");
   button.textContent = text;
-  button.className = page === currentPage ? "active" : "";
+  button.className = (page === currentPage) ? "active" : "";
   button.onclick = () => {
     currentPage = page;
     displayPlayerList();
@@ -109,17 +108,17 @@ function createPaginationDots() {
   return dots;
 }
 
-// Функция для отображения деталей игрока
+// Детали игрока
 function displayPlayerDetails(player) {
   const details = document.getElementById("detailsContainer");
 
-  // Обновляем URL с параметрами игрока
-  const url = new URL(window.location);
-  url.searchParams.set("player", player.nickname);
-  url.searchParams.set("id", player.id);
-  history.pushState(null, null, url.toString());
+  // Обновляем URL с параметрами
+  const newUrl = new URL(window.location);
+  newUrl.searchParams.set("player", player.nickname);
+  newUrl.searchParams.set("id", player.id);
+  history.pushState(null, null, newUrl.toString());
 
-  // Определение пути к изображениям
+  // Пути к изображениям
   const rankImagesPath = "images/ranks/";
   const roleImagesPath = "images/roles/";
   const minRankImage = `${rankImagesPath}${player.minRank}.png`;
@@ -129,19 +128,16 @@ function displayPlayerDetails(player) {
   // Проверяем наличие YouTube-ссылки
   const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/;
   const match = player.status?.match(youtubeRegex);
-
   // Убираем YouTube-ссылку из статуса
   const cleanStatus = player.status?.replace(youtubeRegex, "").replace(/\?.*/, "").trim();
 
-  // Создаём YouTube-видео, если есть
+  // Вставляем YouTube, если есть
   let youtubeEmbed = "";
   if (match) {
     const youtubeVideoId = match[1] || match[2];
     youtubeEmbed = `
       <div class="youtube-container">
         <iframe
-          width="560"
-          height="315"
           src="https://www.youtube.com/embed/${youtubeVideoId}"
           title="YouTube video player"
           frameborder="0"
@@ -152,15 +148,15 @@ function displayPlayerDetails(player) {
     `;
   }
 
-  // Логика отображения рангов
+  // Ранги
   let ranksHtml = "";
   if (player.minRank === player.maxRank) {
-    // Если минимальный и максимальный ранги совпадают, отображаем только одну картинку на месте минимального ранга
+    // Одинаковые ранги
     ranksHtml = `
       <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
     `;
   } else {
-    // Если ранги разные, отображаем обе картинки и разделитель
+    // Два разных ранга
     ranksHtml = `
       <img src="${minRankImage}" alt="${player.minRank}" class="rank-icon" title="${player.minRank}">
       <span class="rank-separator">-</span>
@@ -168,15 +164,14 @@ function displayPlayerDetails(player) {
     `;
   }
 
-  // --- Проверка длины никнейма (пример: более 10 символов) ---
+  // Проверяем длину никнейма, чтобы уменьшать иконки при необходимости
   if (player.nickname && player.nickname.length > 10) {
-    // Добавляем класс long-nickname к detailsContainer
     details.classList.add("long-nickname");
   } else {
     details.classList.remove("long-nickname");
   }
 
-  // Очищаем контейнер и создаём новый контент
+  // Формируем контент карточки
   details.innerHTML = `
     <div class="nickname-container">
       <span class="nickname">${player.nickname}</span>
@@ -193,7 +188,7 @@ function displayPlayerDetails(player) {
   `;
 }
 
-// Функция для поиска игроков
+// Поиск
 function searchPlayer() {
   const query = document.getElementById("search").value.toLowerCase();
   const list = document.getElementById("playerList");
@@ -207,24 +202,24 @@ function searchPlayer() {
 
     list.innerHTML = "";
 
-    filteredPlayers.forEach((player) => {
-      const li = document.createElement("li");
-      li.textContent = player.nickname;
-      li.onclick = () => displayPlayerDetails(player);
-      list.appendChild(li);
-    });
-
     if (filteredPlayers.length === 0) {
       list.innerHTML = `<li style="text-align:center;">No players found</li>`;
+    } else {
+      filteredPlayers.forEach((player) => {
+        const li = document.createElement("li");
+        li.textContent = player.nickname;
+        li.onclick = () => displayPlayerDetails(player);
+        list.appendChild(li);
+      });
     }
   } else {
     pagination.style.display = "flex";
-    displayPlayerList(); // Перерисовываем текущую страницу
+    displayPlayerList();
     displayPagination();
   }
 }
 
-// Функция для проверки URL и загрузки игрока
+// Проверка URL (при перезагрузке страницы)
 function checkUrlParams() {
   const params = new URLSearchParams(window.location.search);
   const nickname = params.get("player");
@@ -239,7 +234,7 @@ function checkUrlParams() {
   }
 }
 
-// Инициализация при загрузке страницы
+// Инициализация
 window.onload = () => {
   fetchPlayers();
 };
