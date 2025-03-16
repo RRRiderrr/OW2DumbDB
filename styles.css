@@ -57,7 +57,7 @@ main {
   width: 30%;
   border-right: 1px solid #333;
   padding: 20px;
-  max-height: 80vh; /* При желании можно убрать, если не нужен скролл */
+  max-height: 80vh; /* Если не нужно ограничение высоты со скроллом — уберите */
   overflow-y: auto; 
   box-sizing: border-box;
 }
@@ -108,7 +108,7 @@ main {
   opacity: 1;
 }
 
-/* Пагинация — идёт потоком (позиция static), чтобы не наезжать на последний элемент */
+/* Пагинация в потоке, чтобы не наезжать на последний элемент */
 .pagination {
   margin-top: 15px; /* Отступ сверху от последнего игрока */
   display: flex;
@@ -231,10 +231,10 @@ main {
   border: none;
 }
 
-/* Фиксированная кнопка всегда на одном месте в углу */
+/* На ПК (и больших экранах) кнопка внизу справа, зафиксирована */
 .publish-button {
   position: fixed;
-  bottom: 20px;   /* Если на некоторых телефонах съезжает под "вырез", можно увеличить, например 60px */
+  bottom: 20px;
   right: 20px;
   background-color: #0875f5;
   color: #fff;
@@ -248,7 +248,7 @@ main {
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, transform 0.3s ease;
-  z-index: 9999; /* Чтобы поверх всего */
+  z-index: 9999;
 }
 
 .publish-button:hover {
@@ -290,14 +290,15 @@ main {
   }
 }
 
-/* 2) Для экранов до 768px (смартфоны) */
+/* 2) Для экранов до 768px (смартфоны и маленькие планшеты) */
 @media (max-width: 768px) {
-  /* Уходим в столбик */
+  /* Верстаем в один столбик */
   main {
     flex-direction: column;
     padding: 10px;
   }
 
+  /* Список и детали на всю ширину */
   .player-list,
   .player-details {
     width: 100%;
@@ -308,13 +309,14 @@ main {
     border-right: none;
     border-bottom: 1px solid #333;
     max-height: unset;
-    padding-bottom: 20px; 
+    padding-bottom: 20px;
   }
 
   .pagination {
     margin-top: 10px;
   }
 
+  /* Уменьшаем размер шрифта */
   .player-list li {
     font-size: 2rem;
   }
@@ -332,8 +334,16 @@ main {
     height: 50px;
   }
 
+  /* YouTube iframe растягиваем на всю ширину */
   .youtube-container iframe {
     max-width: 100%;
     height: auto;
+  }
+
+  /* --- Ключевое отличие на мобильном: кнопка «едет» со скроллом --- */
+  .publish-button {
+    position: static;       /* «Сбрасываем» фиксированное положение */
+    margin: 20px auto;      /* Чтобы она была по центру внизу */
+    display: block;
   }
 }
